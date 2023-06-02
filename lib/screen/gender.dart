@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:serious_dating/utils/contants.dart' as Contsant;
-
 import 'package:serious_dating/utils/helper.dart';
 import 'package:serious_dating/utils/styles.dart';
 
 import '../widget/sign_btn.dart';
+import 'interest.dart';
 
 class SelectGender extends StatefulWidget {
   static String routeName = "/SelectGender";
@@ -16,7 +16,7 @@ class SelectGender extends StatefulWidget {
 }
 
 class _SelectGenderState extends State<SelectGender> {
-  List<String> genderList = ['Man', 'Weman', 'Other'];
+  List<String> genderList = ['Man', 'Woman', 'Other'];
   String selectValue = "";
 
   @override
@@ -64,7 +64,9 @@ class _SelectGenderState extends State<SelectGender> {
                     Text(
                       "I am a",
                       style: Styles.Heading3(
-                          textColor: Colors.black, fontbold: true),
+                          textColor: Colors.black,
+                          fontbold: true,
+                          font: 'nunito'),
                     ),
                     const Spacer(
                       flex: 3,
@@ -109,7 +111,8 @@ class _SelectGenderState extends State<SelectGender> {
                                           textColor:
                                               selectValue == genderList[index]
                                                   ? Colors.white
-                                                  : Colors.grey),
+                                                  : Colors.grey,
+                                          font: 'sans'),
                                     ),
                                     const Spacer(),
                                     if (selectValue == genderList[index])
@@ -133,8 +136,7 @@ class _SelectGenderState extends State<SelectGender> {
                     child: Text(
                       "Skip >",
                       style: Styles.Heading4(
-                        textColor: Contsant.redTitle,
-                      ),
+                          textColor: Contsant.redTitle, font: 'sans'),
                     ),
                     // icon: Icon(Icons.arrow_forward_ios),
                   ),
@@ -156,7 +158,9 @@ class _SelectGenderState extends State<SelectGender> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       child: SignInBtn(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, Interest.routeName);
+                        },
                         title: "Continue",
                         btnColor: const Color(0xffFF3D3D),
                         titleColor: Colors.white,

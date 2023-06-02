@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "336576041403",
+    "project_id": "seriousdating-60f42",
+    "storage_bucket": "seriousdating-60f42.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336576041403:android:e110f156d690fc4d08749e",
+        "android_client_info": {
+          "package_name": "com.example.serious_dating"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfh12Q4u5NO2dHNKN-8UuVVQO5TP816f8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

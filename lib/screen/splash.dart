@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:serious_dating/screen/login.dart';
 import 'package:serious_dating/utils/helper.dart';
 import 'package:serious_dating/widget/sign_btn.dart';
 
 class SplashScreen extends StatefulWidget {
-  static String routeName = "/Splash";
+  static String routeName = "/";
 
   const SplashScreen({super.key});
   @override
@@ -78,8 +76,7 @@ class StartState extends State<SplashScreen> {
                   ),
                   SignInBtn(
                     onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Login()));
+                      Navigator.pushReplacementNamed(context, Login.routeName);
                     },
                     title: 'Get Started',
                     titleColor: const Color(0xffFF0305),
