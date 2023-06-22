@@ -34,6 +34,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       "number": "2233-4455-6677",
     }
   ];
+  int amount = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +55,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
             )),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 109 * fem),
+            padding: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 30 * fem),
             width: MediaQuery.of(context).size.width,
             child: SizedBox(
-              // group605Q2 (187:5)
               width: double.infinity,
               child: Column(
                 children: [
@@ -106,7 +106,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                         const SizedBox(height: 15),
                         Container(
-                          // autogroupswrgwj4 (QtQNYnEtAL2GXJ2g5WswRg)
                           margin: EdgeInsets.symmetric(horizontal: 10 * fem),
                           width: 114 * fem,
                           height: 23 * fem,
@@ -129,7 +128,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                         for (Map list in payList)
                           Container(
-                            // autogroupygykomG (QtQNehEhJuhjec9Ld9YGyk)
                             margin: EdgeInsets.all(10 * fem),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 16 * fem, vertical: 9 * fem),
@@ -147,7 +145,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Container(
-                                      // ellipse27gaA (59:201)
                                       margin: EdgeInsets.fromLTRB(
                                           0 * fem, 0 * fem, 11 * fem, 0 * fem),
                                       width: 50 * fem,
@@ -163,48 +160,42 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      // phoneno2233445566779yY (59:202)
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: GoogleFonts.nunito(
-                                            fontSize: 12 * ffem,
-                                            fontWeight: FontWeight.w600,
-                                            height: 1.7520711327 * ffem / fem,
-                                            color: const Color(0xff000000),
-                                          ),
-                                          children: [
-                                            TextSpan(
-                                              text: 'Phone No. -',
-                                              style: GoogleFonts.nunito(
-                                                fontSize: 12 * ffem,
-                                                fontWeight: FontWeight.w600,
-                                                height:
-                                                    1.7520711327 * ffem / fem,
-                                                color: const Color(0xff535353),
-                                              ),
-                                            ),
-                                            const TextSpan(
-                                              text: ' ',
-                                            ),
-                                            TextSpan(
-                                              text: list['number'],
-                                              style: GoogleFonts.nunito(
-                                                fontSize: 12 * ffem,
-                                                fontWeight: FontWeight.w600,
-                                                height:
-                                                    1.7520711327 * ffem / fem,
-                                                color: const Color(0xffff4141),
-                                              ),
-                                            ),
-                                          ],
+                                    RichText(
+                                      text: TextSpan(
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 12 * ffem,
+                                          fontWeight: FontWeight.w600,
+                                          height: 1.7520711327 * ffem / fem,
+                                          color: const Color(0xff000000),
                                         ),
+                                        children: [
+                                          TextSpan(
+                                            text: 'Phone No. -',
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 12 * ffem,
+                                              fontWeight: FontWeight.w600,
+                                              height: 1.7520711327 * ffem / fem,
+                                              color: const Color(0xff535353),
+                                            ),
+                                          ),
+                                          const TextSpan(
+                                            text: ' ',
+                                          ),
+                                          TextSpan(
+                                            text: list['number'],
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 12 * ffem,
+                                              fontWeight: FontWeight.w600,
+                                              height: 1.7520711327 * ffem / fem,
+                                              color: const Color(0xffff4141),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                                 Container(
-                                  // autogroupm1aeLaA (QtQNmXNeaY9iJTf6KmM1Ae)
                                   margin: EdgeInsets.fromLTRB(
                                       0 * fem, 13 * fem, 0 * fem, 14 * fem),
                                   width: 75 * fem,
@@ -234,7 +225,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ],
                     ),
                   ),
-
                   Container(
                     width: 430 * fem,
                     height: 90 * fem,
@@ -282,12 +272,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                               ),
                             ),
-                            const Icon(Icons.arrow_left),
+                            InkWell(
+                                onTap: () {
+                                  if (amount > 10) {
+                                    setState(() {
+                                      amount -= 10;
+                                    });
+                                  }
+                                },
+                                child: const Icon(Icons.arrow_left)),
                             SizedBox(
-                              width: 55 * fem,
                               height: 37 * fem,
                               child: Text(
-                                '20K',
+                                '${amount}K',
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.nunito(
                                   fontSize: 30 * ffem,
@@ -297,16 +294,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                               ),
                             ),
-                            const Icon(Icons.arrow_right),
+                            InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    amount += 10;
+                                  });
+                                },
+                                child: const Icon(Icons.arrow_right)),
                           ],
                         )
                       ],
                     ),
                   ),
-
-                  //send
                   Container(
-                    // autogroupmk8e9ci (QtQNs73gbHNT47zTBDmk8E)
                     margin: EdgeInsets.only(top: 20 * fem),
                     height: 27 * fem,
                     width: 100 * fem,

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:serious_dating/models/register_user_model.dart';
+import 'package:serious_dating/screen/login.dart';
 import 'package:serious_dating/utils/contants.dart' as Constant;
 import 'package:serious_dating/widget/sign_btn.dart';
-
+import 'package:http/http.dart' as http;
 import '../utils/commom.dart';
 import '../utils/helper.dart';
 import '../utils/styles.dart';
@@ -30,7 +32,12 @@ class _SignInState extends State<SignIn> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
-  String _fName = '', _lName = '', _pass = '', _cPass = '', _email = '';
+  String _fName = '',
+      _lName = '',
+      _pass = '',
+      _cPass = '',
+      _email = '',
+      _mobileNumber = '';
 
   File? imagePic;
 
@@ -196,6 +203,61 @@ class _SignInState extends State<SignIn> {
                           validator: (value) {
                             if (value == '' || value == null) {
                               return 'Enter the last name';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "mobile number",
+                          style: Styles.Heading4(font: 'sans'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFormField(
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                            suffix: CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              radius: 12,
+                              child: Icon(
+                                Icons.edit,
+                                size: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            _mobileNumber = value;
+                          },
+                          validator: (value) {
+                            if (value == '' || value == null) {
+                              return 'Enter the mobile number';
                             }
                             return null;
                           },
@@ -447,7 +509,8 @@ class _SignInState extends State<SignIn> {
                                 barrierDismissible: false,
                                 builder: (BuildContext context) =>
                                     const LoadingWidget());
-                            _doSignUp();
+                           // _doSignUp();
+                            doSignUpWithApi();
                           }
                           // Navigator.pushNamed(
                           //     context, ProfileDetails.routeName);
@@ -573,6 +636,65 @@ class _SignInState extends State<SignIn> {
     }
   }
 
+  void doSignUpWithApi() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    String email = _email.trim().toString();
+    String password = _pass.trim().toString();
+    String firstName = _fName.trim().toString();
+    String lastName = _lName.trim().toString();
+    String mobileNumber = _mobileNumber.trim().toString();
+    final url = Uri.parse('http://35.78.201.111:3022/user/create');
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      "first_name": firstName,
+      "last_name": lastName,
+      "profession": 1,
+      "interest": ["1", "2"],
+      "email": _email,
+      "mobile": _mobileNumber,
+      "password": password,
+      "referCode": ""
+    });
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      final responseData = jsonDecode(response.body);
+      if (responseData['success'] == true) {
+        print(responseData);
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Sign-up successful!'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, Login.routeName);
+      } else {
+        final errorMessage = responseData['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      print(e);
+      final errorMessage = 'An error occurred. Please try again later.';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
   void _doSignUp() async {
     FocusManager.instance.primaryFocus?.unfocus();
     String email = _email.trim();
@@ -587,12 +709,14 @@ class _SignInState extends State<SignIn> {
         RegisterUserModel model = RegisterUserModel(
             firstName: _fName.trim(),
             lastName: _lName.trim(),
+            email: _email.trim(),
             profession: _profession.toString(),
             uid: uid);
         print(model.toJson());
 
         await _firestore.collection('users').doc(uid).set(model.toJson());
         print('User details added');
+        Navigator.pushReplacementNamed(context, Login.routeName);
       } else {
         print('SignUp Failed!');
         showSnackBar('SignUp Failed!', context);

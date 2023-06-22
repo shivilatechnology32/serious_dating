@@ -1,9 +1,12 @@
-import 'dart:io';
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:serious_dating/controllers/login_controller.dart';
 import 'package:serious_dating/screen/sign_in.dart';
 import 'package:serious_dating/utils/helper.dart';
 import 'package:serious_dating/utils/styles.dart';
@@ -12,6 +15,8 @@ import 'package:twitter_login/twitter_login.dart';
 
 import '../utils/commom.dart';
 import '../widget/sign_btn_border.dart';
+import 'DashBoard/bottom_navigation.dart';
+import 'DashBoard/live_stream_screen.dart';
 import 'gender.dart';
 import 'reset_password.dart';
 
@@ -23,9 +28,15 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+// extends GetView<LoginController>
+// GetX<LoginController>
+
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '', _pass = '';
+
+  LoginController loginController = Get.put(LoginController());
+  String email = '' , password = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +73,7 @@ class _LoginState extends State<Login> {
                             focusedBorder: InputBorder.none,
                           ),
                           onChanged: (value) {
-                            _email = value;
+                            loginController.email = value;
                           },
                           validator: (value) {
                             if (value == '' || value == null) {
@@ -91,7 +102,7 @@ class _LoginState extends State<Login> {
                             focusedBorder: InputBorder.none,
                           ),
                           onChanged: (value) {
-                            _pass = value;
+                            loginController.pass = value;
                           },
                           validator: (value) {
                             if (value == '' || value == null) {
@@ -147,17 +158,16 @@ class _LoginState extends State<Login> {
                         padding: const EdgeInsets.symmetric(horizontal: 50),
                         child: SignInBtn(
                           onTap: () {
-                            // if (_formKey.currentState!.validate()) {
-                            //   showDialog(
-                            //       context: context,
-                            //       barrierDismissible: false,
-                            //       builder: (BuildContext context) =>
-                            //           const LoadingWidget());
-                            //   _doLogin();
-                            // }
-                            //Todo: update onclick
-                            Navigator.pushNamed(
-                                context, SelectGender.routeName);
+                            if (_formKey.currentState!.validate()) {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      const LoadingWidget());
+                              _loginWithAPI();
+                             // _doLogin();
+                            }
+
                           },
                           title: "Login",
                           btnColor: const Color(0xffFF3D3D),
@@ -192,8 +202,6 @@ class _LoginState extends State<Login> {
                                   backgroundColor: Colors.transparent,
                                   child: Image.asset(
                                       'assets/icon/google_logo.png'),
-                                  // backgroundImage:
-                                  //     AssetImage('assets/icon/twitter.png'),
                                 ),
                               ),
                               InkWell(
@@ -210,8 +218,6 @@ class _LoginState extends State<Login> {
                                   radius: 15,
                                   backgroundColor: Colors.transparent,
                                   child: Image.asset('assets/icon/twitter.png'),
-                                  // backgroundImage:
-                                  //     AssetImage('assets/icon/twitter.png'),
                                 ),
                               )
                             ],
@@ -283,6 +289,7 @@ class _LoginState extends State<Login> {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       final User? user = userCredential.user;
+      print("---------------------"+ user!.uid.toString());
       // Handle the user login or registration process here
       if (user != null) {
         Navigator.pushNamed(context, SelectGender.routeName);
@@ -290,33 +297,150 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void _doLogin() async {
-    FocusManager.instance.primaryFocus?.unfocus();
+  void _loginWithAPI() async {
+    final url = Uri.parse('http://35.78.201.111:3022/user/login');
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      "username": loginController.email,
+      "password": loginController.pass,
+    });
+
     try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email, password: _pass);
-      Navigator.of(context).pop();
-      if (credential.user != null) {
-        Navigator.pushNamed(context, SelectGender.routeName);
-      }
-    } on FirebaseAuthException catch (e) {
-      Navigator.of(context).pop();
-      if (e.code == 'user-not-found') {
-        showSnackBar('No user found for that email.', context);
-      } else if (e.code == 'invalid-email') {
-        showSnackBar('Invalid email address.', context);
-      } else if (e.code == 'wrong-password') {
-        showSnackBar('Wrong password provided for that user.', context);
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200 ) {
+        final responseData = jsonDecode(response.body);
+        print("ressssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+        print(responseData);
+        if (responseData['success'] == true) {
+          Navigator.of(context).pop();
+          final userData = responseData['data'];
+
+          // Access the user data and perform necessary operations
+          String userId = userData['_id'];
+          String firstName = userData['first_name'];
+          String lastName = userData['last_name'];
+          String email = userData['email'];
+          // ...
+
+          Navigator.of(context).pushReplacementNamed(BottomNavigator.routeName);
+        } else {
+          final errorMessage = responseData['message'];
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       } else {
+        final errorMessage = 'An error occurred. Please try again later.';
         Navigator.of(context).pop();
-        showSnackBar(e.code, context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-    } on SocketException {
-      Navigator.of(context).pop();
-      showSnackBar('No Internet Connection!', context);
     } catch (e) {
+      print(e);
+      final errorMessage = 'An error occurred. Please try again later.';
       Navigator.of(context).pop();
-      showSnackBar(e.toString(), context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
+
+
+
+  // Future<void> _doLogin() async {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) => const LoadingWidget(),
+  //   );
+  //
+  //   try {
+  //     // Simulating an asynchronous login process
+  //     await Future.delayed(Duration(seconds: 2));
+  //
+  //
+  //     final FirebaseAuth _auth = FirebaseAuth.instance;
+  //     final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+  //       email: loginController.email,
+  //       password: loginController.pass
+  //     );
+  //
+  //     // Check if login was successful
+  //     if (userCredential.user != null) {
+  //       // Navigate to a new page
+  //       print(" current user is : " + userCredential.user!.email.toString());
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (BuildContext context) => SelectGender()),
+  //       );
+  //     } else {
+  //       // Show a Snackbar with an error message
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Login failed. Please try again.'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     // Show a Snackbar with the error message
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('An error occurred: $e'),
+  //         duration: Duration(seconds: 2),
+  //       ),
+  //     );
+  //   }
+  //
+  //   // Close the loading dialog
+  //   Navigator.of(context).pop();
+  // }
+
+
+
+// void _doLogin() async {
+  //   FocusManager.instance.primaryFocus?.unfocus();
+  //   try {
+  //     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //         email: loginController.email, password: loginController.pass);
+  //     Navigator.of(context).pop();
+  //     if (credential.user != null) {
+  //       // Navigator.pushNamed(context, SelectGender.routeName);
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     Navigator.of(context).pop();
+  //     if (e.code == 'user-not-found') {
+  //       showSnackBar('No user found for that email.', context);
+  //     } else if (e.code == 'invalid-email') {
+  //       showSnackBar('Invalid email address.', context);
+  //     } else if (e.code == 'wrong-password') {
+  //       showSnackBar('Wrong password provided for that user.', context);
+  //     } else {
+  //     //  Navigator.of(context).pop();
+  //       showSnackBar(e.code, context);
+  //     }
+  //   } on SocketException {
+  //     Navigator.of(context).pop();
+  //     showSnackBar('No Internet Connection!', context);
+  //   } catch (e) {
+  //     Navigator.of(context).pop();
+  //     showSnackBar(e.toString(), context);
+  //   }
+  // }
 }

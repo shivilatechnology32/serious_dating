@@ -229,35 +229,18 @@ class _GlobalProfileState extends State<GlobalProfile> {
                     width: UiHelper.getSize(context).width,
                     color: const Color(0xFFFF5353),
                     child: Center(
-                        child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Gallery',
-                            textAlign: TextAlign.center,
-                            style: Styles.Heading4(
-                                fontbold: true,
-                                textColor: Colors.white,
-                                font: 'sans'),
-                          ),
-                        ),
-                        Container(
-                          height: 36,
-                          width: 36,
-                          color: Colors.white,
-                          child: const Icon(
-                            Icons.add,
-                            color: Color(0xFFFF5353),
-                            size: 27,
-                          ),
-                        )
-                      ],
+                        child: Text(
+                      'Gallery',
+                      textAlign: TextAlign.center,
+                      style: Styles.Heading4(
+                          fontbold: true,
+                          textColor: Colors.white,
+                          font: 'sans'),
                     )),
                   ),
                   Container(
                       color: const Color(0xffFFDFDF),
                       width: UiHelper.getSize(context).width,
-                      // constraints: const BoxConstraints.tightForFinite(width: 200, height: double.maxFinite ) ,
                       padding: const EdgeInsets.all(12.0),
                       child: GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),

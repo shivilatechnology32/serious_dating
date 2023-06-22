@@ -54,9 +54,8 @@ class _SelectGenderState extends State<SelectGender> {
                   ),
                 ),
                 SizedBox(
-                  height: UiHelper.getSize(context).height * 0.07,
+                  height: UiHelper.getSize(context).height * 0.03,
                 ),
-                // Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -73,58 +72,55 @@ class _SelectGenderState extends State<SelectGender> {
                     ),
                   ],
                 ),
-                // const SizedBox(
-                //   height: 20,
-                // ),
-                SizedBox(
-                  // color: Colors.white,
-                  height: UiHelper.getSize(context).height / 3.9,
-                  child: ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: false,
-                    children: List.generate(
-                      genderList.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: InkWell(
-                          onTap: () {
-                            selectValue = genderList[index];
-                            setState(() {});
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: selectValue == genderList[index]
-                                      ? Contsant.redTitle
-                                      : Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                width: UiHelper.getSize(context).width / 1.76,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(children: [
-                                    Text(
-                                      genderList[index],
-                                      style: Styles.Heading4(
-                                          textColor:
-                                              selectValue == genderList[index]
-                                                  ? Colors.white
-                                                  : Colors.grey,
-                                          font: 'sans'),
-                                    ),
-                                    const Spacer(),
-                                    if (selectValue == genderList[index])
-                                      const Icon(
-                                        Icons.done,
-                                        color: Colors.white,
-                                      )
-                                  ]),
-                                ),
+                    SizedBox(
+                      height: UiHelper.getSize(context).height * 0.03,
+                    ),
+                ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  children: List.generate(
+                    genderList.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: InkWell(
+                        onTap: () {
+                          selectValue = genderList[index];
+                          setState(() {});
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: selectValue == genderList[index]
+                                    ? Contsant.redTitle
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                            ],
-                          ),
+                              width: UiHelper.getSize(context).width / 1.76,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(children: [
+                                  Text(
+                                    genderList[index],
+                                    style: Styles.Heading4(
+                                        textColor:
+                                            selectValue == genderList[index]
+                                                ? Colors.white
+                                                : Colors.grey,
+                                        font: 'sans'),
+                                  ),
+                                  const Spacer(),
+                                  if (selectValue == genderList[index])
+                                    const Icon(
+                                      Icons.done,
+                                      color: Colors.white,
+                                    )
+                                ]),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -138,7 +134,6 @@ class _SelectGenderState extends State<SelectGender> {
                       style: Styles.Heading4(
                           textColor: Contsant.redTitle, font: 'sans'),
                     ),
-                    // icon: Icon(Icons.arrow_forward_ios),
                   ),
                 )
               ]),

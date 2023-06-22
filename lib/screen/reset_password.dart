@@ -238,6 +238,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         RegisterUserModel model = RegisterUserModel(
             firstName: _fName.trim(),
             lastName: _lName.trim(),
+            email: _email.trim(),
             profession: '',
             uid: uid);
         print(model.toJson());

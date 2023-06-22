@@ -238,7 +238,6 @@ class _UserProfileState extends State<UserProfile> {
                   Container(
                       color: const Color(0xffFFDFDF),
                       width: UiHelper.getSize(context).width,
-                      // constraints: const BoxConstraints.tightForFinite(width: 200, height: double.maxFinite ) ,
                       padding: const EdgeInsets.all(12.0),
                       child: GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),

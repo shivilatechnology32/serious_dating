@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'package:serious_dating/screen/chat/ChatScreenHome.dart';
 import 'package:serious_dating/screen/gender.dart';
 import 'package:serious_dating/screen/interest.dart';
 import 'package:serious_dating/screen/login.dart';
@@ -22,11 +25,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Serious Dating',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       initialRoute: SplashScreen.routeName,
       routes: {
@@ -40,7 +43,10 @@ class MyApp extends StatelessWidget {
         ResetPassword.routeName: (context) => const ResetPassword(),
         UserMatchScreen.routeName: (context) => const UserMatchScreen(),
         VerifyOTP.routeName: (context) => const VerifyOTP(),
+        ChatScreenHome.routeName: (context)=> const ChatScreenHome(),
       },
     );
   }
 }
+
+

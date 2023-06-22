@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
 import 'package:serious_dating/screen/DashBoard/payment.dart';
-import 'package:serious_dating/screen/DashBoard/payment_status.dart';
 import 'package:serious_dating/screen/DashBoard/people_nearby.dart';
-import 'package:serious_dating/screen/DashBoard/shop.dart';
+import 'package:serious_dating/screen/DashBoard/user_profile.dart';
 import 'package:serious_dating/utils/contants.dart';
 
+import '../chat/ChatScreenHome.dart';
 import 'discovery_settings.dart';
+import 'live_stream_screen.dart';
 
 class BottomNavigator extends StatefulWidget {
   static String routeName = "/BottomNavigator";
@@ -17,16 +19,27 @@ class BottomNavigator extends StatefulWidget {
 }
 
 class _BottomNavigatorState extends State<BottomNavigator> {
-  int _selectedIndex = 4;
-  // ignore: unused_field
+  int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   static const List<Widget> _widgetOptions = <Widget>[
-    DiscoverySettings(),
+    LiveStreamScreen(),
     PeopleNearby(),
-    Shop(),
-    PaymentStatus(),
-    PaymentScreen(),
+    ChatScreenHome(),
+    UserProfile(),
+
+    //  PaymentScreen(),
+    // GiftsLikesPage(),
+    //  ChatScreenHome(),
+    DiscoverySettings(),
+    // comnnebted by krishan DiscoverySettings(),
+    // FindMatches(),
+    // FriendsScreen(),
+    // GlobalProfile(),
+    // SettingScreen(),
+    // Shop(),
+    // UserMatchScreen(),
+    // PaymentStatus(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -36,8 +49,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          // borderRadius: const BorderRadius.only(
-          //     topRight: Radius.circular(20), topLeft: Radius.circular(20)),
           color: const Color.fromARGB(248, 188, 187, 187),
           boxShadow: [
             BoxShadow(

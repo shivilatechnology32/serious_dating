@@ -8,7 +8,6 @@ import '../../widget/sign_btn.dart';
 
 class DiscoverySettings extends StatefulWidget {
   static String routeName = "/DiscoverySettings";
-
   const DiscoverySettings({super.key});
 
   @override
@@ -18,6 +17,8 @@ class DiscoverySettings extends StatefulWidget {
 class _DiscoverySettingsState extends State<DiscoverySettings> {
   double _sliderValue = 1.0;
   double _sliderValue2 = 18;
+  bool showWomen = true;
+  bool showMen = false;
   final List<Map> interestsListAll = [
     {
       "image": 'assets/icon/Cycling.png',
@@ -86,6 +87,7 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
   ];
   List<String> selectedInterests = [];
   bool showAll = false;
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 430;
@@ -134,7 +136,6 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        // autogroupdx3444W (QtPsPsKNGYUvS2tjiTdX34)
                         margin: EdgeInsets.only(bottom: 18 * fem),
                         width: double.infinity,
                         child: Row(
@@ -151,7 +152,6 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                               ),
                             ),
                             Text(
-                              // misGr (34:97)
                               '${_sliderValue.round()}mi',
                               style: GoogleFonts.nunito(
                                 fontSize: 18 * ffem,
@@ -205,7 +205,6 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        // autogroupdx3444W (QtPsPsKNGYUvS2tjiTdX34)
                         margin: EdgeInsets.only(bottom: 18 * fem),
                         width: double.infinity,
                         child: Text(
@@ -219,64 +218,83 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                         ),
                       ),
                       SizedBox(
-                        // autogroupnpxgyFt (QtPupoGYQyRxLaJmj6npXG)
                         width: double.infinity,
                         height: 19 * fem,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              // autogroupby9gESi (QtPuudTpsb7YkX8hGfBy9G)
-                              margin: EdgeInsets.fromLTRB(
-                                  0 * fem, 0 * fem, 28 * fem, 0 * fem),
-                              width: 76 * fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: const Color(0xfff23131),
-                                borderRadius: BorderRadius.circular(4 * fem),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0x26000000),
-                                    offset: Offset(0 * fem, 0 * fem),
-                                    blurRadius: 2.5 * fem,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Woman',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 10 * ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.2024196596 * ffem / fem,
-                                    color: const Color(0xffffffff),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  showWomen = !showWomen;
+                                });
+                              },
+                              child: Container(
+                                margin: EdgeInsets.fromLTRB(
+                                    0 * fem, 0 * fem, 28 * fem, 0 * fem),
+                                width: 76 * fem,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: showWomen
+                                      ? const Color(0xfff23131)
+                                      : const Color(0xffdbdbdb),
+                                  borderRadius: BorderRadius.circular(4 * fem),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0x26000000),
+                                      offset: Offset(0 * fem, 0 * fem),
+                                      blurRadius: 2.5 * fem,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Women',
+                                    style: GoogleFonts.openSans(
+                                      fontSize: 10 * ffem,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.2024196596 * ffem / fem,
+                                      color: showWomen
+                                          ? const Color(0xffffffff)
+                                          : const Color(0xff757575),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            Container(
-                              // autogroupyxwuYbp (QtPuxssQwV7AtczvGsyXwU)
-                              width: 76 * fem,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffdbdbdb),
-                                borderRadius: BorderRadius.circular(4 * fem),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0x26000000),
-                                    offset: Offset(0 * fem, 0 * fem),
-                                    blurRadius: 2.5 * fem,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Men',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 10 * ffem,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.2024196596 * ffem / fem,
-                                    color: const Color(0xff757575),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  showMen = !showMen;
+                                });
+                              },
+                              child: Container(
+                                width: 76 * fem,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: showMen
+                                      ? const Color(0xfff23131)
+                                      : const Color(0xffdbdbdb),
+                                  borderRadius: BorderRadius.circular(4 * fem),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0x26000000),
+                                      offset: Offset(0 * fem, 0 * fem),
+                                      blurRadius: 2.5 * fem,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Men',
+                                    style: GoogleFonts.openSans(
+                                      fontSize: 10 * ffem,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.2024196596 * ffem / fem,
+                                      color: showMen
+                                          ? const Color(0xffffffff)
+                                          : const Color(0xff757575),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -302,7 +320,6 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        // autogroupdx3444W (QtPsPsKNGYUvS2tjiTdX34)
                         margin: EdgeInsets.only(bottom: 18 * fem),
                         width: double.infinity,
                         child: Row(
@@ -319,7 +336,6 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                               ),
                             ),
                             Text(
-                              // misGr (34:97)
                               '${_sliderValue2.round()}-${_sliderValue2.round() + 10}',
                               style: GoogleFonts.nunito(
                                 fontSize: 18 * ffem,
@@ -373,7 +389,6 @@ class _DiscoverySettingsState extends State<DiscoverySettings> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        // autogroupdx3444W (QtPsPsKNGYUvS2tjiTdX34)
                         margin: EdgeInsets.only(bottom: 18 * fem),
                         width: double.infinity,
                         child: Text(

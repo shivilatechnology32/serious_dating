@@ -103,7 +103,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      // rectangle898iz (59:30)
                       margin: EdgeInsets.fromLTRB(
                           0 * fem, 0 * fem, 13 * fem, 0 * fem),
                       width: 107 * fem,
@@ -117,7 +116,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       ),
                     ),
                     Container(
-                      // group24SUn (59:48)
                       margin: EdgeInsets.fromLTRB(
                           0 * fem, 10 * fem, 49 * fem, 9 * fem),
                       width: 119 * fem,
@@ -126,7 +124,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            // loremipsumAfg (59:31)
                             friend['name'],
                             textAlign: TextAlign.center,
                             style: GoogleFonts.nunito(
@@ -137,7 +134,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                             ),
                           ),
                           Container(
-                            // autogrouprqja6ZL (QtQCPjq3K7CcXd1MPYRQJA)
                             padding: EdgeInsets.fromLTRB(
                                 1 * fem, 15 * fem, 1 * fem, 0 * fem),
                             width: double.infinity,
@@ -145,7 +141,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  // autogroupyvtnRLi (QtQCBkB2T2cK6AtNTByvtn)
                                   margin: EdgeInsets.fromLTRB(
                                       0 * fem, 0 * fem, 60 * fem, 15 * fem),
                                   width: double.infinity,
@@ -153,7 +148,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Container(
-                                        // vectorLia (59:33)
                                         margin: EdgeInsets.fromLTRB(
                                             0 * fem, 0 * fem, 5 * fem, 0 * fem),
                                         width: 8 * fem,
@@ -165,7 +159,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                         ),
                                       ),
                                       Text(
-                                        // mileawayfVx (59:32)
                                         friend['distance'],
                                         style: GoogleFonts.nunito(
                                           fontSize: 8 * ffem,
@@ -178,7 +171,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   ),
                                 ),
                                 Container(
-                                  // autogrouphsz8CVt (QtQCHABftrbgf1L5TZHsZ8)
                                   margin: EdgeInsets.fromLTRB(
                                       0 * fem, 0 * fem, 45 * fem, 0 * fem),
                                   width: double.infinity,
@@ -187,7 +179,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                        // matchratingXHG (59:34)
                                         margin: EdgeInsets.fromLTRB(
                                             0 * fem, 0 * fem, 8 * fem, 0 * fem),
                                         child: Text(
@@ -201,7 +192,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                         ),
                                       ),
                                       Text(
-                                        // RtS (59:36)
                                         friend['match'],
                                         style: GoogleFonts.nunito(
                                           fontSize: 8 * ffem,
@@ -220,14 +210,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       ),
                     ),
                     Container(
-                      // autogroup25dgyf4 (QtQBwauxD22GDzBuWh25dG)
                       margin: EdgeInsets.fromLTRB(
                           0 * fem, 0 * fem, 0 * fem, 3 * fem),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Container(
-                            // group21VdQ (59:45)
                             margin: EdgeInsets.fromLTRB(
                                 0 * fem, 0 * fem, 0 * fem, 13 * fem),
                             width: 18 * fem,
@@ -239,7 +227,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                             ),
                           ),
                           Container(
-                            // group22cT8 (59:46)
                             margin: EdgeInsets.fromLTRB(
                                 0 * fem, 0 * fem, 3 * fem, 13 * fem),
                             width: 91 * fem,
@@ -263,7 +250,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                             ),
                           ),
                           Container(
-                            // group23rsG (59:47)
                             width: 91 * fem,
                             height: 22 * fem,
                             margin: EdgeInsets.only(right: 3 * fem),
