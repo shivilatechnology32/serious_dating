@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,11 +9,13 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:serious_dating/controllers/login_controller.dart';
 import 'package:serious_dating/screen/sign_in.dart';
+import 'package:serious_dating/services/storage.dart';
 import 'package:serious_dating/utils/helper.dart';
 import 'package:serious_dating/utils/styles.dart';
 import 'package:serious_dating/widget/sign_btn.dart';
 import 'package:twitter_login/twitter_login.dart';
 
+import '../services/user.dart';
 import '../utils/commom.dart';
 import '../widget/sign_btn_border.dart';
 import 'DashBoard/bottom_navigation.dart';
@@ -22,6 +25,7 @@ import 'reset_password.dart';
 
 class Login extends StatefulWidget {
   static String routeName = "/Login";
+
   const Login({super.key});
 
   @override
@@ -35,7 +39,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
 
   LoginController loginController = Get.put(LoginController());
-  String email = '' , password = '';
+  String email = '', password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +58,13 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Spacer(),
-                      Text("WELCOME",
-                          style: Styles.Heading2(
-                              textColor: const Color(0xffFF3D3D),
-                              font: 'nunito')),
+                      Text(
+                        "WELCOME",
+                        style: Styles.Heading2(
+                          textColor: const Color(0xffFF3D3D),
+                          font: 'nunito',
+                        ),
+                      ),
                       const SizedBox(
                         height: 50,
                       ),
@@ -124,16 +131,18 @@ class _LoginState extends State<Login> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, ResetPassword.routeName);
-                                },
-                                child: Text(
-                                  "Forget Password?",
-                                  style: Styles.Heading5(
-                                      textColor: const Color(0xffFF3D3D),
-                                      font: 'nunito'),
-                                ))
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, ResetPassword.routeName);
+                              },
+                              child: Text(
+                                "Forget Password?",
+                                style: Styles.Heading5(
+                                  textColor: const Color(0xffFF3D3D),
+                                  font: 'nunito',
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -164,10 +173,8 @@ class _LoginState extends State<Login> {
                                   barrierDismissible: false,
                                   builder: (BuildContext context) =>
                                       const LoadingWidget());
-                              _loginWithAPI();
-                             // _doLogin();
+                              loginWithAPI();
                             }
-
                           },
                           title: "Login",
                           btnColor: const Color(0xffFF3D3D),
@@ -289,44 +296,38 @@ class _LoginState extends State<Login> {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       final User? user = userCredential.user;
-      print("---------------------"+ user!.uid.toString());
+      print("---------------------${user!.uid}");
       // Handle the user login or registration process here
-      if (user != null) {
-        Navigator.pushNamed(context, SelectGender.routeName);
-      }
+      Navigator.pushNamed(context, SelectGender.routeName);
     }
   }
 
-  void _loginWithAPI() async {
+  void loginWithAPI() async {
+    log('Hello');
     final url = Uri.parse('http://35.78.201.111:3022/user/login');
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
-    final body = jsonEncode({
+    final body = {
       "username": loginController.email,
       "password": loginController.pass,
-    });
+    };
 
+    log('Hello');
     try {
-      final response = await http.post(url, headers: headers, body: body);
+      final response = await http.post(url, body: body);
+      log('Hello2');
 
-      if (response.statusCode == 200 ) {
+      if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        print("ressssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+        log('Here i am');
         print(responseData);
         if (responseData['success'] == true) {
           Navigator.of(context).pop();
-          final userData = responseData['data'];
-
-          // Access the user data and perform necessary operations
-          String userId = userData['_id'];
-          String firstName = userData['first_name'];
-          String lastName = userData['last_name'];
-          String email = userData['email'];
-          // ...
-
+          StorageService.to.setString('token', responseData['data']['token']);
+          UserStore.to.saveProfile(responseData['data']['_id']);
           Navigator.of(context).pushReplacementNamed(BottomNavigator.routeName);
         } else {
           final errorMessage = responseData['message'];
@@ -339,7 +340,7 @@ class _LoginState extends State<Login> {
           );
         }
       } else {
-        final errorMessage = 'An error occurred. Please try again later.';
+        const errorMessage = 'An error occurred. Please try again later.';
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -350,7 +351,7 @@ class _LoginState extends State<Login> {
       }
     } catch (e) {
       print(e);
-      final errorMessage = 'An error occurred. Please try again later.';
+      const errorMessage = 'An error occurred. Please try again later.';
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -361,86 +362,82 @@ class _LoginState extends State<Login> {
     }
   }
 
-
-
-  // Future<void> _doLogin() async {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) => const LoadingWidget(),
-  //   );
-  //
-  //   try {
-  //     // Simulating an asynchronous login process
-  //     await Future.delayed(Duration(seconds: 2));
-  //
-  //
-  //     final FirebaseAuth _auth = FirebaseAuth.instance;
-  //     final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-  //       email: loginController.email,
-  //       password: loginController.pass
-  //     );
-  //
-  //     // Check if login was successful
-  //     if (userCredential.user != null) {
-  //       // Navigate to a new page
-  //       print(" current user is : " + userCredential.user!.email.toString());
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(builder: (BuildContext context) => SelectGender()),
-  //       );
-  //     } else {
-  //       // Show a Snackbar with an error message
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text('Login failed. Please try again.'),
-  //           duration: Duration(seconds: 2),
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     // Show a Snackbar with the error message
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('An error occurred: $e'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //   }
-  //
-  //   // Close the loading dialog
-  //   Navigator.of(context).pop();
-  // }
-
-
+// Future<void> _doLogin() async {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (BuildContext context) => const LoadingWidget(),
+//   );
+//
+//   try {
+//     // Simulating an asynchronous login process
+//     await Future.delayed(Duration(seconds: 2));
+//
+//
+//     final FirebaseAuth _auth = FirebaseAuth.instance;
+//     final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+//       email: loginController.email,
+//       password: loginController.pass
+//     );
+//
+//     // Check if login was successful
+//     if (userCredential.user != null) {
+//       // Navigate to a new page
+//       print(" current user is : " + userCredential.user!.email.toString());
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(builder: (BuildContext context) => SelectGender()),
+//       );
+//     } else {
+//       // Show a Snackbar with an error message
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Login failed. Please try again.'),
+//           duration: Duration(seconds: 2),
+//         ),
+//       );
+//     }
+//   } catch (e) {
+//     // Show a Snackbar with the error message
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text('An error occurred: $e'),
+//         duration: Duration(seconds: 2),
+//       ),
+//     );
+//   }
+//
+//   // Close the loading dialog
+//   Navigator.of(context).pop();
+// }
 
 // void _doLogin() async {
-  //   FocusManager.instance.primaryFocus?.unfocus();
-  //   try {
-  //     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //         email: loginController.email, password: loginController.pass);
-  //     Navigator.of(context).pop();
-  //     if (credential.user != null) {
-  //       // Navigator.pushNamed(context, SelectGender.routeName);
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     Navigator.of(context).pop();
-  //     if (e.code == 'user-not-found') {
-  //       showSnackBar('No user found for that email.', context);
-  //     } else if (e.code == 'invalid-email') {
-  //       showSnackBar('Invalid email address.', context);
-  //     } else if (e.code == 'wrong-password') {
-  //       showSnackBar('Wrong password provided for that user.', context);
-  //     } else {
-  //     //  Navigator.of(context).pop();
-  //       showSnackBar(e.code, context);
-  //     }
-  //   } on SocketException {
-  //     Navigator.of(context).pop();
-  //     showSnackBar('No Internet Connection!', context);
-  //   } catch (e) {
-  //     Navigator.of(context).pop();
-  //     showSnackBar(e.toString(), context);
-  //   }
-  // }
+//   FocusManager.instance.primaryFocus?.unfocus();
+//   try {
+//     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+//         email: loginController.email, password: loginController.pass);
+//     Navigator.of(context).pop();
+//     if (credential.user != null) {
+//       // Navigator.pushNamed(context, SelectGender.routeName);
+//     }
+//   } on FirebaseAuthException catch (e) {
+//     Navigator.of(context).pop();
+//     if (e.code == 'user-not-found') {
+//       showSnackBar('No user found for that email.', context);
+//     } else if (e.code == 'invalid-email') {
+//       showSnackBar('Invalid email address.', context);
+//     } else if (e.code == 'wrong-password') {
+//       showSnackBar('Wrong password provided for that user.', context);
+//     } else {
+//     //  Navigator.of(context).pop();
+//       showSnackBar(e.code, context);
+//     }
+//   } on SocketException {
+//     Navigator.of(context).pop();
+//     showSnackBar('No Internet Connection!', context);
+//   } catch (e) {
+//     Navigator.of(context).pop();
+//     showSnackBar(e.toString(), context);
+//   }
+// }
 }

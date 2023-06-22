@@ -33,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         elevation: 0,
 
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black, // Change the color of the back arrow here
         ),
         actions: [
@@ -49,9 +49,9 @@ class _ChatScreenState extends State<ChatScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(),
+                const CircleAvatar(),
                 Text('  ${widget.name.toString()}',
-                style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 22),
+                style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 22),
                 ),
 
                 const Spacer(),

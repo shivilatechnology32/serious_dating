@@ -34,7 +34,7 @@ class _ChatScreenHomeState extends State<ChatScreenHome> {
       backgroundColor: Colors.redAccent,
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
-        title:  Text('Chat Messa'),
+        title:  const Text('Chat Messa'),
         elevation: 0,
         centerTitle: true,
         actions: [
@@ -71,7 +71,7 @@ class _ChatScreenHomeState extends State<ChatScreenHome> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
+                              horizontal: 20, vertical: 20,),
                           child: Text(
                             'All Chats',
                             style: Styles.h1().copyWith(color: Colors.indigo),

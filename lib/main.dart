@@ -8,6 +8,9 @@ import 'package:serious_dating/screen/interest.dart';
 import 'package:serious_dating/screen/login.dart';
 import 'package:serious_dating/screen/reset_verify_otp.dart';
 import 'package:serious_dating/screen/splash.dart';
+import 'package:serious_dating/services/firebase.dart';
+import 'package:serious_dating/services/storage.dart';
+import 'package:serious_dating/services/user.dart';
 
 import 'screen/DashBoard/bottom_navigation.dart';
 import 'screen/DashBoard/user_match_screen.dart';
@@ -17,6 +20,9 @@ import 'screen/sign_in.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Get.put(FirebaseFireStore());
+  await Get.putAsync<StorageService>(() => StorageService().init());
+  Get.put<UserStore>(UserStore());
   runApp(const MyApp());
 }
 
@@ -31,7 +37,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: SplashScreen.routeName,
+      initialRoute:  SplashScreen.routeName,
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),
         Login.routeName: (context) => const Login(),

@@ -7,16 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:serious_dating/models/register_user_model.dart';
+import 'package:serious_dating/models/user_model/user_model.dart';
 import 'package:serious_dating/screen/login.dart';
 import 'package:serious_dating/utils/contants.dart' as Constant;
 import 'package:serious_dating/widget/sign_btn.dart';
 import 'package:http/http.dart' as http;
+import '../services/firebase.dart';
 import '../utils/commom.dart';
 import '../utils/helper.dart';
 import '../utils/styles.dart';
 
 class SignIn extends StatefulWidget {
   static String routeName = "/SignIn";
+
   const SignIn({super.key});
 
   @override
@@ -50,8 +53,11 @@ class _SignInState extends State<SignIn> {
         child: Container(
           width: UiHelper.getSize(context).width,
           decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/bg/bg1.jpg"), fit: BoxFit.cover)),
+            image: DecorationImage(
+              image: AssetImage("assets/bg/bg1.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
           // color: const Color(0xffFFE3E3),
           child: Column(
             children: [
@@ -85,12 +91,14 @@ class _SignInState extends State<SignIn> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(50),
-                    image: DecorationImage(
-                        image: imagePic == null
-                            ? const AssetImage("assets/icon/man.png")
-                            : FileImage(imagePic!) as ImageProvider)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                  image: DecorationImage(
+                    image: imagePic == null
+                        ? const AssetImage("assets/icon/man.png")
+                        : FileImage(imagePic!) as ImageProvider,
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 5,
@@ -505,11 +513,11 @@ class _SignInState extends State<SignIn> {
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
                             showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) =>
-                                    const LoadingWidget());
-                           // _doSignUp();
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) =>
+                                  const LoadingWidget(),
+                            );
                             doSignUpWithApi();
                           }
                           // Navigator.pushNamed(
@@ -665,10 +673,20 @@ class _SignInState extends State<SignIn> {
       if (responseData['success'] == true) {
         print(responseData);
         Navigator.of(context).pop();
+        FirebaseFireStore.to.addUser(
+          UserModel(
+            uid: responseData['data']['_id'],
+            username: '$firstName $lastName',
+            phoneNumber: mobileNumber,
+            email: email,
+            photoId: responseData['data']['displayPhoto'],
+            gender: '',
+          ),
+        );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Sign-up successful!'),
-            duration: const Duration(seconds: 2),
+          const SnackBar(
+            content: Text('Sign-up successful!'),
+            duration: Duration(seconds: 2),
           ),
         );
         Navigator.pushReplacementNamed(context, Login.routeName);
@@ -684,9 +702,9 @@ class _SignInState extends State<SignIn> {
       }
     } catch (e) {
       print(e);
-      final errorMessage = 'An error occurred. Please try again later.';
+      const errorMessage = 'An error occurred. Please try again later.';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(errorMessage),
           backgroundColor: Colors.red,
         ),
