@@ -18,7 +18,7 @@ class UserStore extends GetxController {
   String userProfilePicKey = 'userProfilePicKey';
   String userTokenKey = 'userTokenKey';
   String userEmailKey = 'userEmailKey';
-  final _profile =  UserModel(
+  final Rx<UserModel> _profile = const UserModel(
     uid: '',
     photoId: '',
     email: '',
@@ -26,6 +26,8 @@ class UserStore extends GetxController {
     gender: '',
     username: '',
   ).obs;
+
+  UserModel get profile => _profile.value;
 
   bool get isLogin => _isLogin.value;
 

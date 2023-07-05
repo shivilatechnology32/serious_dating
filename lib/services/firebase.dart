@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:get/get.dart';
 import 'package:serious_dating/services/user.dart';
+import '../models/chat_room_model/chat_room_model.dart';
 import '../models/user_model/user_model.dart';
 
 class FirebaseFireStore extends GetxController {
@@ -32,4 +33,53 @@ class FirebaseFireStore extends GetxController {
     await fireStore.collection("Users").doc(user.uid).update(user.toJson());
     await UserStore.to.getProfile();
   }
+
+  Future<void> sendMessage(
+      Map<String, dynamic> messageContent, String chatRoomId) async {
+    return await fireStore
+        .collection('chats')
+        .doc(chatRoomId)
+        .collection("chatList")
+        .doc()
+        .set(messageContent);
+  }
+
+  Future<void> updateMessage(
+      Map<String, dynamic> lastMessage, String chatRoomId) async {
+    return await fireStore
+        .collection('chats')
+        .doc(chatRoomId)
+        .update(lastMessage);
+  }
+
+  Stream<QuerySnapshot> readMessage(String docId) {
+    return fireStore
+        .collection("chats")
+        .doc(docId)
+        .collection("chatList")
+        .orderBy("messageTm", descending: false)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getChatRoom() {
+    return fireStore
+        .collection("chats")
+        .where("users", arrayContains: UserStore.to.uid)
+        .where("lastMessage", isNotEqualTo: '')
+        .orderBy("lastMessage", descending: false)
+        .orderBy("lastMessageTm", descending: true)
+        .snapshots();
+  }
+
+  Future<void> createChatRoom(ChatRoomModel chatRoom) async {
+    final doc =
+    await fireStore.collection("chats").doc(chatRoom.chatRoomId).get();
+    if (!doc.exists) {
+      await fireStore
+          .collection("chats")
+          .doc(chatRoom.chatRoomId)
+          .set(chatRoom.toJson());
+    }
+  }
+
 }
